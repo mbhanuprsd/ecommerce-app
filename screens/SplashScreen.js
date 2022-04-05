@@ -15,7 +15,7 @@ const SplashScreen = () => {
                 else {
                     navigation.replace("Login");
                 }
-            }, 1000);
+            }, 2000);
         })
 
         return unsubscribe
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     text: {
         color: '#fff',
         fontSize: 42,
-        fontWeight: 800,
+        fontWeight: '800',
         margin: 20,
     }
 })

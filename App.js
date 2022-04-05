@@ -8,6 +8,7 @@ import SplashScreen from './screens/SplashScreen';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  
 
   return (
     <NavigationContainer theme={DarkTheme}>

@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Base ecommerce app with react native",
+    "githubUrl": "https://github.com/mbhanuprsd/ecommerce-app"
   }
 }

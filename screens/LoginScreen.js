@@ -80,7 +80,7 @@ export default LoginScreen
 const styles = StyleSheet.create({
     text: {
         color: 'tomato',
-        fontWeight: 700,
+        fontWeight: '700',
         fontSize: 32,
         margin: 60,
     },
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     },
     input: {
         color: 'tomato',
-        fontWeight:500,
+        fontWeight:'500',
         backgroundColor: 'white',
         paddingHorizontal: 15,
         paddingVertical: 10,
