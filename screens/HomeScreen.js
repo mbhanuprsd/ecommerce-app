@@ -1,73 +1,41 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { auth } from '../firebase'
-import { useNavigation } from "@react-navigation/core";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ProductsPage from './home/ProductsPage';
+import OrdersPage from './home/OrdersPage';
+import ProfilePage from './home/ProfilePage';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+
+const Tab = createBottomTabNavigator();
 
 const HomeScreen = () => {
-    const navigation = useNavigation();
-    const userEmail = auth.currentUser?.email;
-
-    const handleSignout = () => {
-        auth.signOut()
-            .then(() => {
-                navigation.replace("Login");
-            })
-            .catch(err => alert(err.message))
-    }
     return (
-        <View style={styles.container}>
-            <Text>Email: {userEmail}</Text>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={handleSignout}>
-                <Text style={styles.buttonText}>Sign Out</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={styles.fab}
-                onPress={() => navigation.navigate("AddProduct")}>
-                <Text style={styles.fabText}>+</Text>
-            </TouchableOpacity>
-        </View>
+        <Tab.Navigator
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+
+                    if (route.name === 'Products') {
+                        iconName = focused
+                            ? 'dropbox'
+                            : 'inbox';
+                    } else if (route.name === 'Orders') {
+                        iconName = focused ? 'shopping-cart' : 'opencart';
+                    } else{
+                        iconName = focused ? 'user-circle' : 'user-o';
+                    }
+
+                    // You can return any component that you like here!
+                    return <FontAwesome name={iconName} size={size} color={color} />;
+                },
+                tabBarActiveTintColor: 'tomato',
+                tabBarInactiveTintColor: 'gray',
+            })}>
+            <Tab.Screen options={{ headerShown: false }} name="Products" component={ProductsPage} />
+            <Tab.Screen options={{ headerShown: false }} name="Orders" component={OrdersPage} />
+            <Tab.Screen options={{ headerShown: false }} name="Profile" component={ProfilePage} />
+        </Tab.Navigator>
     )
 }
 
 export default HomeScreen
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    button: {
-        backgroundColor: '#0782F9',
-        width: '60%',
-        padding: 15,
-        borderRadius: 10,
-        alignItems: 'center',
-        marginTop: 40
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: '700',
-        fontSize: 16,
-    },
-    fab: {
-        borderWidth: 1,
-        borderColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 60,
-        height: 60,
-        position: 'absolute',
-        bottom: 15,
-        right: 15,
-        backgroundColor: '#0782F9',
-        borderRadius: 100,
-    },
-    fabText: {
-        color: 'white',
-        fontWeight: '100',
-        fontSize: 36,
-    },
-})

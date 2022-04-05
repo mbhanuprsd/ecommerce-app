@@ -1,8 +1,8 @@
 import { KeyboardAvoidingView, TextInput, Text, TouchableOpacity, StyleSheet, View } from 'react-native'
 import React, {useState, useEffect} from 'react'
-import { auth } from '../firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation } from "@react-navigation/core";
+import { auth } from '../utils/FirebaseUtil';
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('');
@@ -43,6 +43,7 @@ const LoginScreen = () => {
         <KeyboardAvoidingView
             style={styles.container}
             behavior="padding">
+                <Text style={styles.text}>E-commerce App</Text>
             <View style={styles.inputContainer}>
                 <TextInput
                     placeholder='Email'
@@ -77,6 +78,12 @@ const LoginScreen = () => {
 export default LoginScreen
 
 const styles = StyleSheet.create({
+    text: {
+        color: 'tomato',
+        fontWeight: 700,
+        fontSize: 32,
+        margin: 60,
+    },
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -86,20 +93,22 @@ const styles = StyleSheet.create({
         width: '80%'
     },
     input: {
+        color: 'tomato',
+        fontWeight:500,
         backgroundColor: 'white',
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,
-        marginTop: 5,
+        margin: 5,
     },
     buttonContainer: {
         width: '60%',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 40,
+        margin: 40,
     },
     button: {
-        backgroundColor: '#0782F9',
+        backgroundColor: 'tomato',
         width: '100%',
         padding: 15,
         borderRadius: 10,
@@ -112,12 +121,12 @@ const styles = StyleSheet.create({
     },
     buttonOutline: {
         backgroundColor: 'white',
-        marginTop: 5,
-        borderColor: '#0782F9',
+        margin: 5,
+        borderColor: 'tomato',
         borderWidth: 2,
     },
     buttonOutLineText: {
-        color: '#0782F9',
+        color: 'tomato',
         fontWeight: '700',
         fontSize: 16,
     },
