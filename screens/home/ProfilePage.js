@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import { auth } from '../../utils/FirebaseUtil';
 import { useNavigation } from "@react-navigation/core";
 
 const ProfilePage = () => {
-    const navigation = useNavigation();
-    const userEmail = auth.currentUser?.email;
+    const navigation = useNavigation()
+    const userEmail = auth.currentUser?.email
+    const userPhoto = auth?.currentUser?.photoURL
 
     const handleSignout = () => {
         auth.signOut()
@@ -15,21 +16,27 @@ const ProfilePage = () => {
             .catch(err => alert(err.message))
     }
 
-  return (
-    <View style={styles.container}>
+    return (
+        <View style={styles.container}>
+            {userPhoto === null
+                ? <Image
+                    style={styles.userImage}
+                    source={{
+                        uri: 'https://reactnative.dev/img/tiny_logo.png',
+                    }}
+                />
+                : <Image
+                    source={{ uri: userPhoto }}
+                    style={styles.userImage} />
+            }
             <Text style={styles.text}>Email: {userEmail}</Text>
             <TouchableOpacity
                 style={styles.button}
                 onPress={handleSignout}>
                 <Text style={styles.buttonText}>Sign Out</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={styles.fab}
-                onPress={() => navigation.navigate("AddProduct")}>
-                <Text style={styles.fabText}>+</Text>
-            </TouchableOpacity>
         </View>
-  )
+    )
 }
 
 export default ProfilePage
@@ -45,7 +52,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        backgroundColor: 'tomato',
+        backgroundColor: 'teal',
         width: '60%',
         padding: 15,
         borderRadius: 10,
@@ -56,5 +63,12 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: '700',
         fontSize: 16,
+    },
+    userImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        margin: 20,
+        padding: 5,
     }
 })

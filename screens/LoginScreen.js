@@ -1,8 +1,9 @@
 import { KeyboardAvoidingView, TextInput, Text, TouchableOpacity, StyleSheet, View } from 'react-native'
-import React, {useState, useEffect} from 'react'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useState, useEffect } from 'react'
 import { useNavigation } from "@react-navigation/core";
 import { auth } from '../utils/FirebaseUtil';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import firebase from 'firebase/compat/app'
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('');
@@ -10,40 +11,47 @@ const LoginScreen = () => {
 
     const navigation = useNavigation()
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            if (user)
-            {
-                navigation.replace("Home");
-            }
-        })
+    const [user] = useAuthState(auth);
 
-        return unsubscribe
-    }, [])
+    useEffect(() => {
+        if (user) {
+            navigation.replace("Home");
+        }
+    }, [user])
 
     const handleSignUp = () => {
-        createUserWithEmailAndPassword(auth, email, password)
-        .then(userCredentials => {
-            const user = userCredentials.user;
-            console.log("Registered with " + user.email);
-        })
-        .catch(err => alert(err.message))
+        auth.createUserWithEmailAndPassword(email, password)
+            .then(userCredentials => {
+                const user = userCredentials.user;
+                console.log("Registered with " + user.email);
+            })
+            .catch(err => alert(err.message))
     }
 
     const handleLogin = () => {
-        signInWithEmailAndPassword(auth, email, password)
-        .then(userCredentials => {
-            const user = userCredentials.user;
-            console.log("Logged in with " + user.email);
-        })
-        .catch(err => alert(err.message))
+        auth.signInWithEmailAndPassword(email, password)
+            .then(userCredentials => {
+                const user = userCredentials.user;
+                console.log("Logged in with " + user.email);
+            })
+            .catch(err => alert(err.message))
+    }
+
+    const handleGoogleSignIn = () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider)
+            .then(userCredentials => {
+                const user = userCredentials.user;
+                console.log("Logged in with " + user.email);
+            })
+            .catch(err => alert(err.message))
     }
 
     return (
         <KeyboardAvoidingView
             style={styles.container}
             behavior="padding">
-                <Text style={styles.text}>E-commerce App</Text>
+            <Text style={styles.text}>E-commerce App</Text>
             <View style={styles.inputContainer}>
                 <TextInput
                     placeholder='Email'
@@ -70,6 +78,11 @@ const LoginScreen = () => {
                     style={[styles.button, styles.buttonOutline]}>
                     <Text style={styles.buttonOutLineText}>Register</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={handleGoogleSignIn}
+                    style={[styles.button]}>
+                    <Text style={styles.buttonText}>Sign-in with Google</Text>
+                </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>
     )
@@ -79,7 +92,7 @@ export default LoginScreen
 
 const styles = StyleSheet.create({
     text: {
-        color: 'tomato',
+        color: 'teal',
         fontWeight: '700',
         fontSize: 32,
         margin: 60,
@@ -93,8 +106,7 @@ const styles = StyleSheet.create({
         width: '80%'
     },
     input: {
-        color: 'tomato',
-        fontWeight:'500',
+        fontWeight: '500',
         backgroundColor: 'white',
         paddingHorizontal: 15,
         paddingVertical: 10,
@@ -108,7 +120,7 @@ const styles = StyleSheet.create({
         margin: 40,
     },
     button: {
-        backgroundColor: 'tomato',
+        backgroundColor: 'teal',
         width: '100%',
         padding: 15,
         borderRadius: 10,
@@ -122,11 +134,11 @@ const styles = StyleSheet.create({
     buttonOutline: {
         backgroundColor: 'white',
         margin: 5,
-        borderColor: 'tomato',
+        borderColor: 'teal',
         borderWidth: 2,
     },
     buttonOutLineText: {
-        color: 'tomato',
+        color: 'teal',
         fontWeight: '700',
         fontSize: 16,
     },

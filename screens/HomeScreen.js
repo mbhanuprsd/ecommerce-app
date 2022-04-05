@@ -5,6 +5,7 @@ import ProductsPage from './home/ProductsPage';
 import OrdersPage from './home/OrdersPage';
 import ProfilePage from './home/ProfilePage';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import LiveChatPage from './home/LiveChatPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,16 +22,19 @@ const HomeScreen = () => {
                             : 'inbox';
                     } else if (route.name === 'Orders') {
                         iconName = focused ? 'shopping-cart' : 'opencart';
-                    } else{
+                    } else if (route.name === 'Profile'){
                         iconName = focused ? 'user-circle' : 'user-o';
+                    } else {
+                        iconName = 'wechat';
                     }
 
                     // You can return any component that you like here!
                     return <FontAwesome name={iconName} size={size} color={color} />;
                 },
-                tabBarActiveTintColor: 'tomato',
+                tabBarActiveTintColor: 'teal',
                 tabBarInactiveTintColor: 'gray',
             })}>
+            <Tab.Screen options={{ headerShown: false }} name="Chat" component={LiveChatPage} />
             <Tab.Screen options={{ headerShown: false }} name="Products" component={ProductsPage} />
             <Tab.Screen options={{ headerShown: false }} name="Orders" component={OrdersPage} />
             <Tab.Screen options={{ headerShown: false }} name="Profile" component={ProfilePage} />

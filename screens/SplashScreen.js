@@ -15,17 +15,17 @@ const SplashScreen = () => {
                 else {
                     navigation.replace("Login");
                 }
-            }, 2000);
+            }, 1000);
         })
 
         return unsubscribe
     }, [])
 
     return (
-        <View style={{justifyContent: 'center', alignItems: 'center', height:'100%'}}>
-            
+        <View style={{ justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+
             <Text style={styles.text}>E-Commerce App</Text>
-            <ActivityIndicator size="large" color="tomato" style={{margin:40}} />
+            <ActivityIndicator size="large" color="teal" style={{ margin: 40 }} />
 
         </View>
     )
