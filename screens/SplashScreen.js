@@ -15,7 +15,7 @@ const SplashScreen = () => {
                 else {
                     navigation.replace("Login");
                 }
-            }, 2000);
+            }, 1000);
         })
 
         return unsubscribe
