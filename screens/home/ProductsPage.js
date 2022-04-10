@@ -57,7 +57,6 @@ const ProductItem = (props) => {
       setCart(temp)
     }
   }
-  let nf = new Intl.NumberFormat('en-IN');
   return (
     <View style={styles.productItemContainer}>
       <Image
@@ -67,7 +66,7 @@ const ProductItem = (props) => {
         {`${title} - ${brand}`}
       </Text>
       <Text numberOfLines={1} style={styles.productItemPriceText}>
-        {`Price: ${nf.format(price)}₹`}
+        {`Price: ${price}₹`}
       </Text>
       <View style={{ flexDirection: 'row', alignContent: 'center' }}>
         <TouchableOpacity onPress={removeFromCart}>
