@@ -1,15 +1,17 @@
-import { StyleSheet, TextInput, Text, Image, View, TouchableOpacity, ScrollView, FlatList } from 'react-native'
+import { StyleSheet, TextInput, Button, Text, Image, View, TouchableOpacity, ScrollView, FlatList } from 'react-native'
 import React from 'react'
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { findProducts } from '../../utils/APIUtility';
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import firebase from 'firebase/compat/app'
+import "firebase/compat/firestore";
+import AppContext from '../../utils/AppContext';
 
 const ProductsPage = () => {
   const [searchValue, setSearchValue] = React.useState('');
-  const [products, setProducts] = React.useState(null);
 
-  const searchProducts = () => {
-    findProducts(searchValue, setProducts)
-  }
+  const productsRef = firebase.firestore().collection('products');
+  const q = productsRef.orderBy('id', 'desc');
+
+  const [products] = useCollectionData(q, { idField: 'id' });
 
   return (
     <View style={{ flex: 1 }}>
@@ -18,17 +20,15 @@ const ProductsPage = () => {
           style={styles.searchInput}
           value={searchValue}
           onChangeText={(text) => setSearchValue(text)}
-          onSubmitEditing={searchProducts}
           autoFocus={true}
           placeholder='Search Products' />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={searchProducts}>
-          <FontAwesome name='search' size={20} color='white' />
-        </TouchableOpacity>
       </View>
       <ScrollView
-        contentContainerStyle={{ flexDirection: "row", flexWrap: "wrap", alignContent: "center", }}
+        contentContainerStyle={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          alignContent: "center"
+        }}
         style={styles.productsContainer}>
         {products
           && products.map((prod, index) => <ProductItem key={`product${index}`} product={prod} />)}
@@ -38,16 +38,48 @@ const ProductsPage = () => {
 }
 
 const ProductItem = (props) => {
-  const { title, image } = props.product
+  const { cart, setCart } = React.useContext(AppContext)
 
+  const { id, title, image, brand, price } = props.product
+
+  const addToCart = () => {
+    let temp = [...cart]
+    temp.push(props.product)
+    setCart(temp)
+  }
+
+  const removeFromCart = () => {
+    let temp = [...cart];
+    if(temp.includes(props.product))
+    {
+      let index = temp.lastIndexOf(props.product)
+      temp.pop(temp[index])
+      setCart(temp)
+    }
+  }
+  let nf = new Intl.NumberFormat('en-IN');
   return (
     <View style={styles.productItemContainer}>
       <Image
         source={{ uri: image }}
         style={styles.productItemImage} />
-      <Text style={styles.productItemText}>
-        {title}
+      <Text numberOfLines={1} style={styles.productItemTitleText}>
+        {`${title} - ${brand}`}
       </Text>
+      <Text numberOfLines={1} style={styles.productItemPriceText}>
+        {`Price: ${nf.format(price)}₹`}
+      </Text>
+      <View style={{ flexDirection: 'row', alignContent: 'center' }}>
+        <TouchableOpacity onPress={removeFromCart}>
+          <Text style={styles.productCartButton}>-</Text>
+        </TouchableOpacity>
+        <Text style={styles.productCartCount}>
+          {cart.filter((p) => p.id == id).length}
+        </Text>
+        <TouchableOpacity onPress={addToCart}>
+          <Text style={styles.productCartButton}>+</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }
@@ -81,29 +113,49 @@ const styles = StyleSheet.create({
     paddingEnd: 10,
   },
   productItemContainer: {
-    width: 160,
-    height: 160,
+    width: 132,
     margin: 10,
     borderRadius: 10,
     padding: 10,
-    backgroundColor: 'teal',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
   },
   productItemImage: {
     width: 100,
     height: 100,
-    borderRadius: 5,
-    borderWidth: 2,
-    borderColor: 'black',
     marginBottom: 10,
   },
-  productItemText: {
-    color: 'white',
+  productItemTitleText: {
+    color: 'black',
     fontSize: 12,
-    overflow: 'hidden',
+    fontWeight: '700',
     textAlign: 'center',
-    height: 40,
   },
-
+  productItemPriceText: {
+    color: 'black',
+    fontSize: 12,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  productCartButton: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: '600',
+    backgroundColor: 'black',
+    width: 30,
+    height: 30,
+    textAlign: 'center',
+  },
+  productCartCount: {
+    color: 'black',
+    fontSize: 14,
+    width: 30,
+    height: 30,
+    padding: 5,
+    fontWeight: '600',
+    textAlign: 'center',
+    justifyContent: 'center',
+  }
 })
