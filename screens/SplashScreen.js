@@ -36,7 +36,7 @@ export default SplashScreen
 const styles = StyleSheet.create({
     text: {
         color: '#fff',
-        fontSize: 42,
+        fontSize: 32,
         fontWeight: '800',
         margin: 20,
     }

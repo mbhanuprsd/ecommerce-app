@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/core";
 const ProfilePage = () => {
     const navigation = useNavigation()
     const userEmail = auth.currentUser?.email
-    const userPhoto = auth?.currentUser?.photoURL
+    const photoURL = auth?.currentUser?.photoURL
 
     const handleSignout = () => {
         auth.signOut()
@@ -18,15 +18,13 @@ const ProfilePage = () => {
 
     return (
         <View style={styles.container}>
-            {userPhoto === null
-                ? <Image
-                    style={styles.userImage}
-                    source={{
-                        uri: 'https://reactnative.dev/img/tiny_logo.png',
-                    }}
-                />
+            {photoURL === null
+                ? <Text
+                    style={styles.textImage}>
+                    {userEmail.substring(0, 2).toUpperCase()}
+                </Text>
                 : <Image
-                    source={{ uri: userPhoto }}
+                    source={{ uri: photoURL }}
                     style={styles.userImage} />
             }
             <Text style={styles.text}>Email: {userEmail}</Text>
@@ -70,5 +68,18 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         margin: 20,
         padding: 5,
+    },
+    textImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        margin: 20,
+        padding: 5,
+        paddingTop: 15,
+        backgroundColor: 'teal',
+        color: 'white',
+        textAlign: 'center',
+        fontWeight: '600',
+        fontSize: 48
     }
 })

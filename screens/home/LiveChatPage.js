@@ -22,12 +22,13 @@ const LiveChatPage = () => {
         e.preventDefault();
         setFormValue('')
 
-        const { uid, photoURL } = auth.currentUser;
-        
+        const { uid, email, photoURL } = auth.currentUser;
+
         await messagesRef.add({
             text: formValue,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             uid,
+            email,
             photoURL
         }).catch(err => alert(err.message))
 
@@ -46,12 +47,10 @@ const LiveChatPage = () => {
             <View
                 style={styles.messageInputContainer}>
                 {auth?.currentUser?.photoURL === null
-                    ? <Image
-                        style={styles.userImage}
-                        source={{
-                            uri: 'https://reactnative.dev/img/tiny_logo.png',
-                        }}
-                    />
+                    ? <Text
+                        style={styles.textImage}>
+                        {auth?.currentUser?.email.substring(0, 2).toUpperCase()}
+                    </Text>
                     : <Image
                         source={{ uri: auth?.currentUser?.photoURL }}
                         style={styles.userImage} />
@@ -74,19 +73,17 @@ const LiveChatPage = () => {
 }
 
 const ChatMessage = (props) => {
-    const { text, uid, photoURL } = props.message;
+    const { text, uid, email, photoURL } = props.message;
 
     const isUserMsg = uid === auth.currentUser.uid;
 
     return (
         <View style={isUserMsg ? styles.msgReverseContainer : styles.msgContainer}>
             {photoURL === null
-                ? <Image
-                    style={styles.userImage}
-                    source={{
-                        uri: 'https://reactnative.dev/img/tiny_logo.png',
-                    }}
-                />
+                ? <Text
+                style={styles.textImage}>
+                {email.substring(0, 2).toUpperCase()}
+            </Text>
                 : <Image
                     source={{ uri: photoURL }}
                     style={styles.userImage} />
@@ -99,6 +96,8 @@ export default LiveChatPage
 
 const styles = StyleSheet.create({
     messageContainer: {
+        paddingStart: 10,
+        paddingEnd: 10,
     },
     messageInputContainer: {
         flexDirection: 'row',
@@ -149,5 +148,17 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         margin: 5,
         padding: 5,
+    },
+    textImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        margin: 5,
+        padding: 5,
+        backgroundColor: 'teal',
+        color: 'white',
+        textAlign: 'center',
+        fontWeight: '600',
+        fontSize: 20
     }
 })

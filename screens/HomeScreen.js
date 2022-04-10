@@ -24,6 +24,8 @@ const HomeScreen = () => {
                         iconName = focused ? 'shopping-cart' : 'opencart';
                     } else if (route.name === 'Profile'){
                         iconName = focused ? 'user-circle' : 'user-o';
+                    } else if (route.name === 'Movies') {
+                        iconName = focused ? 'film' : 'film';
                     } else {
                         iconName = 'wechat';
                     }
@@ -34,10 +36,10 @@ const HomeScreen = () => {
                 tabBarActiveTintColor: 'teal',
                 tabBarInactiveTintColor: 'gray',
             })}>
-            <Tab.Screen options={{ headerShown: false }} name="Chat" component={LiveChatPage} />
-            <Tab.Screen options={{ headerShown: false }} name="Products" component={ProductsPage} />
-            <Tab.Screen options={{ headerShown: false }} name="Orders" component={OrdersPage} />
-            <Tab.Screen options={{ headerShown: false }} name="Profile" component={ProfilePage} />
+            <Tab.Screen options={{ headerTitleAlign: 'center', title: 'Product List' }} name="Products" component={ProductsPage} />
+            <Tab.Screen options={{ headerTitleAlign: 'center', title: 'Orders' }} name="Orders" component={OrdersPage} />
+            <Tab.Screen options={{ headerTitleAlign: 'center', title: 'Live Chat' }} name="Chat" component={LiveChatPage} />
+            <Tab.Screen options={{ headerTitleAlign: 'center', title: 'Profile' }} name="Profile" component={ProfilePage} />
         </Tab.Navigator>
     )
 }
